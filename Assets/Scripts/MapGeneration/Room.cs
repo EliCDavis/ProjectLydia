@@ -81,6 +81,17 @@ namespace Lydia.MapGeneration {
 			return false;
 		}
 
+		public override string ToString () {
+			string str = "Origin: " + this.position.ToString () + ": [";
+			for (var i = 0; i < this.Area.Length; i++) {
+				str += this.Area [i].ToString ();
+				if (i != this.Area.Length -1) {
+					str += ", ";
+				}
+			}
+			return str + "]"; 
+		}
+
 	}
 
 }

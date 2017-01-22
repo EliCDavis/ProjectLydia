@@ -20,7 +20,17 @@ namespace Lydia.MapGeneration {
 		}
 
 		public Map(Room[] rooms){
-			this.rooms = new List<Room> (rooms);
+			this.rooms = new List<Room> ();
+
+			Room addResult = null;
+
+			// Add rooms one by one and check if any overlap with eachother
+			for (var i = 0; i < rooms.Length; i ++) {
+				addResult = this.AddRoom (rooms [i]);
+				if (addResult != null) {
+					Debug.LogWarning ("Unable to add room due to overlapping issues. Room[" + i + "]: " + rooms[i].ToString() + ". Overlaps with: " + addResult.ToString());
+				}
+			}
 		}
 
 		/// <summary>
@@ -35,9 +45,9 @@ namespace Lydia.MapGeneration {
 		/// <summary>
 		/// Adds the room to the map if it doesn't overlap with other rooms
 		/// </summary>
-		/// <returns><c>true</c>, if room was added, <c>false</c> otherwise.</returns>
+		/// <returns><c>null</c>, if room was added, <c>room instace</c> of the room it's overlapping with.</returns>
 		/// <param name="roomToAdd">Room to add.</param>
-		public bool AddRoom(Room roomToAdd) {
+		public Room AddRoom(Room roomToAdd) {
 
 			/**
 			 * Make sure the room we're trying to add isn't 
@@ -45,12 +55,12 @@ namespace Lydia.MapGeneration {
 			 */
 			foreach (Room room in rooms) {
 				if (room.overlaps(roomToAdd)) {
-					return false;
+					return room;
 				}
 			}
 
 			rooms.Add (roomToAdd);
-			return true;
+			return null;
 		}
 
 	}
