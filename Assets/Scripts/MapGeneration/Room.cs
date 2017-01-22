@@ -1,0 +1,86 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Lydia.MapGeneration {
+
+	/// <summary>
+	/// A Single room which has a position and area it takes up.
+	/// </summary>
+	public class Room {
+
+		/// <summary>
+		/// Position of the room relative to map coordinates
+		/// </summary>
+		private Vector2 position;
+
+		/// <summary>
+		/// Area the the room takes up.
+		/// 
+		/// Example: [(0,0), (1,0), (0,1)] would make a room 
+		/// in the shape of an L
+		/// </summary>
+		private Vector2[] area;
+
+		public Room(Vector2 position, Vector2[] area){
+
+			if (position == null) {
+				this.position = new Vector2 (0, 0);
+			} else {
+				this.position = position;
+			}
+
+			if (area == null) {
+				this.area = new Vector2[0];
+			} else {
+				this.area = area;
+			}
+
+		}
+
+		/// <summary>
+		/// Position of the room relative to map coordinates
+		/// </summary>
+		public Vector2 Position {
+			get {
+				return position;
+			}
+		}
+
+		/// <summary>
+		/// Area the the room takes up.
+		/// 
+		/// Example: [(0,0), (1,0), (0,1)] would make a room 
+		/// in the shape of an L
+		/// </summary>
+		public Vector2[] Area {
+			get {
+				return area;
+			}
+		}
+
+		/// <summary>
+		/// Whether or not this room is taking up space
+		/// that the other room occupies and vice versa
+		/// </summary>
+		/// <param name="otherRoom">Other room.</param>
+		public bool overlaps(Room otherRoom){
+
+			if (otherRoom == null) {
+				return false;
+			}
+
+			foreach (Vector2 ourArea in this.Area) {
+				foreach (Vector2 otherArea in otherRoom.Area) {
+					if (ourArea.x + this.Position.x == otherArea.x + otherRoom.Position.x && ourArea.y + this.Position.y == otherArea.y + otherRoom.Position.y) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+	}
+
+}
