@@ -19,7 +19,7 @@ namespace Lydia.Scenes.Factory {
 		}
 	
 		void RestartLevel() {
-			currentMap = MapGenerator.CreateMap (32, 1);
+			currentMap = MapGenerator.CreateMap (100, 1);
 			MapGenerator.BuildMap(currentMap);
 		}
 

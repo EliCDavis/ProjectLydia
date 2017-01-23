@@ -87,6 +87,11 @@ namespace Lydia.MapGeneration {
 			// Randomly add a new area with a random amount of chance that decreases with each area added
 			while (Random.Range(.1f-(roomsArea.Count*.1f), 2f) >= 0) {
 				List<Vector2> areaToPickFrom = AvailableAreaToPickFrom (areaOccupied, roomsArea);
+
+				if(areaToPickFrom.Count == 0){
+					break;
+				}
+
 				Vector2 pickedArea = areaToPickFrom [Random.Range (0, areaToPickFrom.Count - 1)];
 				if(positionSet == false){
 					position = pickedArea;
@@ -129,8 +134,6 @@ namespace Lydia.MapGeneration {
 
 			if (roomSurroundingArea.Count == 0 && thisRoomsArea.Count == 0) {
 
-				Debug.Log ("stargin");
-
 				// Add in any area that a room can start in
 				foreach (Vector2 roomArea in areaOccupied) {
 					foreach (Vector2 direction in directions) {
@@ -149,7 +152,11 @@ namespace Lydia.MapGeneration {
 				}
 			}
 
-			return roomSurroundingArea.Count == 0 ? new List<Vector2>(new Vector2[]{new Vector2(0, 0)}): roomSurroundingArea;
+			if (roomSurroundingArea.Count == 0 && areaOccupied.Count == 0) {
+				roomSurroundingArea.Add (Vector2.zero);
+			}
+
+			return roomSurroundingArea;
 		}
 
 		/// <summary>
