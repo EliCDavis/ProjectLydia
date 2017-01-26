@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Factory-Concrete Aggregate Smoke
+  m_Name: Factory-Concrete Aggregate Smoke 1
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _EMISSION _NORMALMAP
   m_LightmapFlags: 1
@@ -43,13 +43,13 @@ Material:
         name: _EmissionMap
       second:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 0.5, y: 0.5}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex
       second:
         m_Texture: {fileID: 2800000, guid: ac1b15e3315d0f64687fec0beb79f768, type: 3}
-        m_Scale: {x: 0.5, y: 0.5}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MetallicGlossMap

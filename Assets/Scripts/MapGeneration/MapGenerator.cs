@@ -31,7 +31,7 @@ namespace Lydia.MapGeneration {
 		/// <summary>
 		/// 4 directions outlined for utilitarian purposes
 		/// </summary>
-		private static readonly Vector2[] directions = new Vector2[]{
+		public static readonly Vector2[] directions = new Vector2[]{
 			Vector2.left,
 			Vector2.right,
 			Vector2.up,
@@ -41,7 +41,7 @@ namespace Lydia.MapGeneration {
 		/// <summary>
 		/// The size of a single floor tile. (width and height)
 		/// </summary>
-		private static readonly int TILE_SIZE = 5;
+		public static readonly int TILE_SIZE = 5;
 
 		/// <summary>
 		/// Creates a map object representing the layout.
@@ -151,6 +151,11 @@ namespace Lydia.MapGeneration {
 					roomSurroundingArea.Remove (occupiedArea);
 				}
 			}
+			foreach (Vector2 occupiedArea in thisRoomsArea) {
+				if (roomSurroundingArea.Contains(occupiedArea)) {
+					roomSurroundingArea.Remove (occupiedArea);
+				}
+			}
 
 			if (roomSurroundingArea.Count == 0 && areaOccupied.Count == 0) {
 				roomSurroundingArea.Add (Vector2.zero);
@@ -171,9 +176,13 @@ namespace Lydia.MapGeneration {
 			}
 
 			GameObject mapObject = new GameObject ("Map");
+			MapBehavior mapBehavior = mapObject.AddComponent<MapBehavior> ();
+			mapBehavior.SetMapReference (mapToBuild);
 
 			foreach (Room room in mapToBuild.Rooms) {
-				BuildRoom (room).transform.parent = mapObject.transform;
+				GameObject roomObject = BuildRoom (room);
+				roomObject.transform.parent = mapObject.transform;
+				mapBehavior.AddRoom (roomObject.GetComponent<RoomBehavior>());
 			}
 
 			return mapObject;
@@ -192,8 +201,11 @@ namespace Lydia.MapGeneration {
 				return null;
 			}
 
+			// Create the object
 			GameObject room = new GameObject ("Room:"+roomToBuild.Position);
 			room.transform.position = new Vector3 (roomToBuild.Position.x*TILE_SIZE, 0, roomToBuild.Position.y*TILE_SIZE);
+			RoomBehavior roomBehavior = room.AddComponent<RoomBehavior> ();
+			roomBehavior.SetRoomReference (roomToBuild);
 
 			// Build each area
 			foreach (Vector2 area in roomToBuild.Area) {

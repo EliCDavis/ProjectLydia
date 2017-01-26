@@ -24,11 +24,7 @@ namespace Lydia.MapGeneration {
 
 		public Room(Vector2 position, Vector2[] area){
 
-			if (position == null) {
-				this.position = new Vector2 (0, 0);
-			} else {
-				this.position = position;
-			}
+			this.position = position;
 
 			if (area == null) {
 				this.area = new Vector2[0];
@@ -81,6 +77,23 @@ namespace Lydia.MapGeneration {
 			return false;
 		}
 
+		/// <summary>
+		/// This Room explicitly contains the area passed in.
+		/// This performs no implicit casting such as (int)vector.x.
+		/// </summary>
+		/// <returns><c>true</c>, if area was containsed, <c>false</c> otherwise.</returns>
+		/// <param name="area">Area.</param>
+		public bool ContainsArea(Vector2 area) {
+
+			foreach (Vector2 ourArea in this.Area) {
+				if (this.Position + ourArea == area) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public override string ToString () {
 			string str = "Origin: " + this.position.ToString () + ": [";
 			for (var i = 0; i < this.Area.Length; i++) {
@@ -90,6 +103,52 @@ namespace Lydia.MapGeneration {
 				}
 			}
 			return str + "]"; 
+		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj == null || GetType () != obj.GetType ()) {
+				return false;
+			}
+
+			Room r = (Room)obj;
+
+			if(r.Position != this.Position){
+				return false;
+			}
+
+			if (this.Area.Length != r.Area.Length) {
+				return false;
+			}
+
+			bool containsArea = false;
+
+			foreach (Vector2 otherArea in r.Area) {
+
+				containsArea = false;
+
+				foreach (Vector2 ourArea in this.Area) {
+
+					if (otherArea == ourArea) {
+						containsArea = true;
+						break;
+					}
+
+				}
+
+				if (containsArea == false) {
+					return false;
+				}
+			}
+
+
+			return true;
+
+		}
+
+		public override int GetHashCode() {
+			// only way these are equal is if both rooms are in same position
+			return (int)position.x ^ (int)position.y;
 		}
 
 	}
