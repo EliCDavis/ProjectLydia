@@ -51,16 +51,8 @@ namespace Lydia.Scenes.Factory {
 				return;
 			}
 
-			Debug.Log ("Starting Next Wave...");
-
 			// Get Room Player is in
 			Room roomPlayerIsIn = mapBehavior.RoomThatContainsPoint(playerPosition);
-
-			if (roomPlayerIsIn != null) {
-				Debug.Log ("Player is in room: " + roomPlayerIsIn.ToString ());
-			} else {
-				Debug.Log ("Player is not in a room");
-			}
 
 			// Get Neighboring Rooms of Player's
 			Room[] neighboringRooms = currentMapBehavior.GetMapReference().RoomsSurrounding(roomPlayerIsIn);
@@ -68,6 +60,7 @@ namespace Lydia.Scenes.Factory {
 			// Pick random Neighboring room
 			Room selectedRoomToMerge = null;
 
+			// If we where able to find a neighboring room..
 			if (neighboringRooms != null && neighboringRooms.Length > 0) {
 				selectedRoomToMerge = neighboringRooms[Random.Range(0, neighboringRooms.Length - 1)];
 			}
@@ -77,7 +70,7 @@ namespace Lydia.Scenes.Factory {
 				currentMapBehavior.MergeRooms (roomPlayerIsIn, selectedRoomToMerge);
 			} else {
 				// We're at the end of the game! No more rooms to merge!
-				Debug.Log("You Won!");
+				Debug.Log("You Won! Or we where just unable to find a neighboring room.");
 			}
 
 		}

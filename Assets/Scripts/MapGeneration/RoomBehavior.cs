@@ -22,6 +22,11 @@ namespace Lydia.MapGeneration {
 			return roomReference;
 		}
 
+		/// <summary>
+		/// Whether or not the room contains the point in world space
+		/// </summary>
+		/// <returns><c>true</c>, if point was containsed, <c>false</c> otherwise.</returns>
+		/// <param name="point">Point in world space</param>
 		public bool ContainsPoint (Vector3 point) {
 
 			if (roomReference == null) {

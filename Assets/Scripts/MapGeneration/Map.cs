@@ -89,7 +89,7 @@ namespace Lydia.MapGeneration {
 
 			List<Vector2> combinedArea = new List<Vector2> ();
 			foreach (Vector2 area in room1.Area) {
-				combinedArea.Add (room1.Position + area);
+				combinedArea.Add (area);
 			}
 			foreach (Vector2 area in room2.Area) {
 				combinedArea.Add (room2.Position + area - room1.Position);
@@ -107,7 +107,16 @@ namespace Lydia.MapGeneration {
 			return mergedRoom;
 		}
 
+		/// <summary>
+		/// Finds what rooms are surrounding the current room, if there are any.
+		/// </summary>
+		/// <returns>Null if the room passed in is null, and a list if not</returns>
+		/// <param name="room">Room.</param>
 		public Room[] RoomsSurrounding(Room room) {
+
+			if (room == null) {
+				return null;
+			}
 
 			List<Vector2> areaSurroundingRoom = new List<Vector2> ();
 
@@ -116,8 +125,8 @@ namespace Lydia.MapGeneration {
 			 */
 			foreach (Vector2 area in room.Area) {
 				foreach(Vector2 direction in MapGenerator.directions){
-					if (!areaSurroundingRoom.Contains(area + direction)) {
-						areaSurroundingRoom.Add (area + direction);
+					if (!areaSurroundingRoom.Contains(area + direction + room.Position)) {
+						areaSurroundingRoom.Add (area + direction + room.Position);
 					}
 				}
 			}

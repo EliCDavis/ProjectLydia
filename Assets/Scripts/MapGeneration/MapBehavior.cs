@@ -37,6 +37,12 @@ namespace Lydia.MapGeneration {
 			return mapReference;
 		}
 
+		/// <summary>
+		/// Merges the two rooms together if their adjacent to eachother,
+		/// deleting any walls that seperate them.
+		/// </summary>
+		/// <param name="room1">Room1.</param>
+		/// <param name="room2">Room2.</param>
 		public void MergeRooms(Room room1, Room room2) {
 
 			if (room1 == null || room2 == null) {
@@ -60,16 +66,12 @@ namespace Lydia.MapGeneration {
 				}
 			}
 
-			Debug.Log ("Number of rooms: " + this.getRooms().Count);
-
 			if (room1Behavior == null || room2Behavior == null) {
 				Debug.LogError ("Unable to merge rooms due to inability to find Room Behaviors");
 				return;
 			}
 
 			var mergedRoom = this.mapReference.MergeRooms (room1Behavior.GetRoomReference (), room2Behavior.GetRoomReference ());
-
-			Debug.Log ("new room; " + mergedRoom.ToString());
 
 			// Create the new room object
 			GameObject mergedRoomObject = new GameObject("Room"+mergedRoom.Position);
@@ -108,8 +110,8 @@ namespace Lydia.MapGeneration {
 		/// The y direction is completely ignored and only
 		/// the x and z directions are taken into account.
 		/// </summary>
-		/// <returns>The Room that contains the point.</returns>
-		/// <param name="point">Point.</param>
+		/// <returns>The Room that contains the point. Null if we can't find a room</returns>
+		/// <param name="point">Point in world space.</param>
 		public Room RoomThatContainsPoint(Vector3 point){
 
 			foreach (RoomBehavior room in this.getRooms()) {
