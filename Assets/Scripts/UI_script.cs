@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class UI_script : MonoBehaviour {
 
     GameObject[] pauseObjects;
+    GameObject[] clickObjects;
+    GameObject[] clicknotObjects;
   
 
     // Use this for initialization
@@ -14,6 +16,9 @@ public class UI_script : MonoBehaviour {
         Time.timeScale = 1;
         pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
         hidePaused();
+        clickObjects = GameObject.FindGameObjectsWithTag("ShowOnClick");
+        clicknotObjects = GameObject.FindGameObjectsWithTag("HideOnClick");
+        hideClicked();
     }
 
     // Update is called once per frame
@@ -36,8 +41,12 @@ public class UI_script : MonoBehaviour {
                 hidePaused();
             }
         }
+       
+
+        
     }
 
+    
 
     //Restarts level
     public void Restart()
@@ -60,6 +69,8 @@ public class UI_script : MonoBehaviour {
         }
     }
 
+
+
     //shows objects with ShowOnPause tag
     public void showPaused()
     {
@@ -68,7 +79,18 @@ public class UI_script : MonoBehaviour {
             g.SetActive(true);
         }
     }
-
+    
+    public void showClicked()
+    {
+        foreach (GameObject g in clickObjects)
+        {
+            g.SetActive(true);
+        }
+        foreach (GameObject g in clicknotObjects)
+        {
+            g.SetActive(false);
+        }
+    }
     //hides objects with ShowOnPause tag
     public void hidePaused()
     {
@@ -78,10 +100,35 @@ public class UI_script : MonoBehaviour {
         }
     }
 
-    //loads inputted level
-    public void LoadLevel(string level)
+    public void hideClicked()
     {
-        SceneManager.LoadScene(level);
+        foreach (GameObject g in clickObjects)
+        {
+            g.SetActive(false);
+        }
+        foreach (GameObject g in clicknotObjects)
+        {
+            g.SetActive(true);
+        }
+    }
+    public void Credits(string Credits)
+    {
+        SceneManager.LoadScene(Credits);
+    }
+
+    
+
+    //exits to Main Menu
+    public void LoadLevel(string MainMenu)
+    {
+        //Application.Quit();
+        // SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(MainMenu);
+    }
+
+    public void quit()
+    {
+        Application.Quit();
     }
 }
 
