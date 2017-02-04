@@ -5,7 +5,6 @@ using UnityEngine;
 public class AI_Controller : MonoBehaviour {
 
 	public GameObject player;
-	public float vmax;
 	public float mag;
 	public float max_dist;
 
@@ -18,15 +17,37 @@ public class AI_Controller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 enemyToPlayer = Vector3.Normalize(player.transform.position - transform.position);
-		float theta = Mathf.Acos (Vector3.Dot (enemyToPlayer, transform.forward));
-		if (enemyToPlayer.x*transform.position.z - enemyToPlayer.z*transform.position.x < 0)
-			theta *= -1;
-		if (Mathf.Abs (theta) > 0.01f) {
-			transform.Rotate (0, theta, 0);
+
+		Vector3 e2p = Vector3.Normalize(player.transform.position - transform.position);
+		float t = Mathf.Acos (Vector3.Dot (e2p, transform.forward));
+
+		if (transform.forward.x * e2p.z - transform.forward.z * e2p.x > 0) {
+			t *= -1;
 		}
-		transform.Translate (transform.forward * Time.deltaTime, Space.World);
+
+		RaycastHit hit;
+		float theta = 0;
+		Vector3 sum = new Vector3 (0, 0, 0);
+		while (theta <= Mathf.PI + 0.01f) {
+			Vector3 r = transform.right;
+			float sin = Mathf.Sin (theta);
+			float cos = Mathf.Cos (theta);
+			Vector3 dir = new Vector3 (cos * r.x - sin * r.z, 0, sin * r.x + cos * r.z);
+			if (Physics.Raycast (transform.position, dir, out hit, max_dist)) {
+				Debug.Log ("Hi");
+				sum -= dir;
+			}
+			theta += Mathf.PI / 8;
+		}
+
+		if (Mathf.Abs (t) > 0.01f) {
+			transform.Rotate (0, mag * t, 0);
+		}
+
+		sum += transform.forward;
+
+		if (player.activeSelf) {
+			transform.Translate (sum * mag  * Time.deltaTime, Space.World);
+		}
 	}
-
-
 }
