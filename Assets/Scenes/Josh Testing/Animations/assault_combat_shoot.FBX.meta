@@ -77,7 +77,7 @@ ModelImporter:
       name: assault_combat_shoot
       takeName: Take 001
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 13
       wrapMode: 1
       orientationOffsetY: 0
       level: 0

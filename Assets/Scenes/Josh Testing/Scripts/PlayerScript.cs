@@ -6,28 +6,30 @@ public class PlayerScript : MonoBehaviour {
 
 	public Animator anim;
 	public Rigidbody rbody;
-	private bool run;
-	private bool shoot; 
-
-	private float inputH;
+	public Laser laser;
+	public float speedMultiplier;
 	private float inputV;
 
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
-		run = false;
-		shoot = false;
+		speedMultiplier = 6f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		inputV = Input.GetAxis("Vertical");
+		anim.SetFloat("inputV", inputV);
 
-		// If Player enters '1', then the wave animation will play. 
-		if (Input.GetKeyDown("1")) {
-			anim.Play("Wave", -1, 0f);
+		float move = inputV*speedMultiplier*Time.deltaTime;
+		
+		if (move < 0f) {
+			speedMultiplier = 2f;
+		} else {
+			speedMultiplier = 6f;
 		}
-
+		
 		if (Input.GetKeyDown("2")) {
 
 			int random = Random.Range(0,2);
@@ -39,43 +41,22 @@ public class PlayerScript : MonoBehaviour {
 			} 
 		}
 
-		if (Input.GetKey(KeyCode.LeftShift)) {
-			run = true;
-		} else {
-			run = false;
-		}
+		if (Input.GetMouseButtonDown(0)) {
+			if (inputV == 0) {
+				anim.Play("assault_combat_shoot", -1, 0f);
+			}
 
-		if (Input.GetMouseButtonDown(0) && !run) {
-			anim.Play("assault_combat_shoot", -1, 0f);
-			shoot = true;
+			laser.testing();
 		}
 
 		if (Input.GetMouseButtonDown(1)) {
-			//anim.Play("assault_combat_shoot_burst", -1, 0f);
-			shoot = true;
-		}
-
-		inputH = Input.GetAxis("Horizontal");
-		inputV = Input.GetAxis("Vertical");
-
-		anim.SetFloat("inputH", inputH);
-		anim.SetFloat("inputV", inputV);
-		anim.SetBool("run", run);
-		anim.SetBool("shoot", shoot);
-
-		float moveX = inputH*2f*Time.deltaTime;
-		float moveZ = inputV*2f*Time.deltaTime;
-
-		if (moveZ <= 0f) {
-			moveX = 0f;
-		} else if (run) {
-			moveX*=3f;
-			moveZ*=3f;
+			if (inputV == 0) {
+				anim.Play("assault_combat_shoot_burst", -1, 0f);
+			}
 		}
 
 		CorrectPosition();
-		transform.Translate(new Vector3(moveX, 0, moveZ));
-		shoot = false;
+		transform.Translate(new Vector3(0, 0, move));
 	}
 
 	void CorrectPosition() {
@@ -96,4 +77,5 @@ public class PlayerScript : MonoBehaviour {
 			anim.Play("DAMAGED01", -1, 0.6f);
 		}
 	}
+
 }
