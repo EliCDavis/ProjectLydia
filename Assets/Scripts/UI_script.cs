@@ -8,7 +8,10 @@ public class UI_script : MonoBehaviour {
     GameObject[] pauseObjects;
     GameObject[] clickObjects;
     GameObject[] clicknotObjects;
-  
+    GameObject[] howtoplay;
+    GameObject[] hownottoplay;
+	GameObject[] credits;
+    GameObject[] deathObjects;
 
     // Use this for initialization
     void Start()
@@ -16,9 +19,17 @@ public class UI_script : MonoBehaviour {
         Time.timeScale = 1;
         pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
         hidePaused();
+        howtoplay = GameObject.FindGameObjectsWithTag("howtoplay");
+        hownottoplay = GameObject.FindGameObjectsWithTag("hownottoplay");
+        hidehowtoplay();
+		credits = GameObject.FindGameObjectsWithTag("credits");
+		hideCredits ();
+        deathObjects = GameObject.FindGameObjectsWithTag("death");
+        hideDeath();
         clickObjects = GameObject.FindGameObjectsWithTag("ShowOnClick");
         clicknotObjects = GameObject.FindGameObjectsWithTag("HideOnClick");
         hideClicked();
+        
     }
 
     // Update is called once per frame
@@ -41,12 +52,12 @@ public class UI_script : MonoBehaviour {
                 hidePaused();
             }
         }
-       
 
-        
+
+
     }
 
-    
+
 
     //Restarts level
     public void Restart()
@@ -79,7 +90,61 @@ public class UI_script : MonoBehaviour {
             g.SetActive(true);
         }
     }
+
+    public void showhowtoplay()
+    {
+        foreach (GameObject g in howtoplay)
+        {
+            g.SetActive(true);
+        }
+        foreach (GameObject g in hownottoplay)
+        {
+            g.SetActive(false);
+        }
+    }
     
+    public void hidehowtoplay()
+    {
+        foreach (GameObject g in howtoplay)
+        {
+            g.SetActive(false);
+        }
+        foreach (GameObject g in hownottoplay)
+        {
+            g.SetActive(true);
+        }
+ 
+    }
+	public void hideCredits()
+	{
+		foreach (GameObject g in credits) {
+			g.SetActive (false);
+		}
+	}
+
+	public void showCredits()
+	{
+		foreach (GameObject g in credits) {
+			g.SetActive (true);
+		}
+	}
+    
+    public void showDeath()
+    {
+        foreach (GameObject g in deathObjects)
+        {
+            g.SetActive(true);
+        }
+    }
+
+    public void hideDeath()
+    {
+        foreach (GameObject g in deathObjects)
+        {
+            g.SetActive(false);
+        }
+    }
+
     public void showClicked()
     {
         foreach (GameObject g in clickObjects)
@@ -111,12 +176,13 @@ public class UI_script : MonoBehaviour {
             g.SetActive(true);
         }
     }
+	
     public void Credits(string Credits)
     {
         SceneManager.LoadScene(Credits);
     }
 
-    
+
 
     //exits to Main Menu
     public void LoadLevel(string MainMenu)
