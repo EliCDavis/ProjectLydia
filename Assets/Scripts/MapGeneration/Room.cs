@@ -94,6 +94,29 @@ namespace Lydia.MapGeneration {
 			return false;
 		}
 
+		/// <summary>
+		/// Figures out a random position within the area of 
+		/// the room
+		/// </summary>
+		/// <returns>The random position if we have area, the rooms position if we don't</returns>
+		public Vector3 GetRandomPosition() {
+
+			// return this room's position if theirs no area
+			if (this.Area.Length == 0) {
+				return this.Position * MapGenerator.TILE_SIZE;
+			}
+
+			// Get a random area..
+			Vector2 rndArea = this.Area[Random.Range (0, this.Area.Length)];
+
+			// Return a random position within the area..
+			return new Vector3(
+				(rndArea.x + this.Position.x) * MapGenerator.TILE_SIZE + Random.Range(1f, MapGenerator.TILE_SIZE-1f),
+				1,
+				(rndArea.y + this.Position.y) * MapGenerator.TILE_SIZE + Random.Range(1f, MapGenerator.TILE_SIZE-1f)
+			);
+		}
+
 		public override string ToString () {
 			string str = "Origin: " + this.position.ToString () + ": [";
 			for (var i = 0; i < this.Area.Length; i++) {

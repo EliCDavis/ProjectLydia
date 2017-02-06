@@ -41,18 +41,19 @@ namespace Lydia.MapGeneration {
 		/// Merges the two rooms together if their adjacent to eachother,
 		/// deleting any walls that seperate them.
 		/// </summary>
+		/// <returns>The merged room.</returns>
 		/// <param name="room1">Room1.</param>
 		/// <param name="room2">Room2.</param>
-		public void MergeRooms(Room room1, Room room2) {
+		public RoomBehavior MergeRooms(Room room1, Room room2) {
 
 			if (room1 == null || room2 == null) {
 				Debug.LogError ("Unable to merge rooms due to one or more of the rooms being null!");
-				return;
+				return null;
 			}
 
 			if (room1.Equals(room2)) {
 				Debug.LogWarning ("Unable to merge rooms due to the two rooms being passed in are already the same.");
-				return;
+				return null;
 			}
 
 			RoomBehavior room1Behavior = null;
@@ -68,10 +69,10 @@ namespace Lydia.MapGeneration {
 
 			if (room1Behavior == null || room2Behavior == null) {
 				Debug.LogError ("Unable to merge rooms due to inability to find Room Behaviors");
-				return;
+				return null;
 			}
 
-			var mergedRoom = this.mapReference.MergeRooms (room1Behavior.GetRoomReference (), room2Behavior.GetRoomReference ());
+			Room mergedRoom = this.mapReference.MergeRooms (room1Behavior.GetRoomReference (), room2Behavior.GetRoomReference ());
 
 			// Create the new room object
 			GameObject mergedRoomObject = new GameObject("Room"+mergedRoom.Position);
@@ -102,6 +103,8 @@ namespace Lydia.MapGeneration {
 
 			Destroy (room1Behavior.gameObject);
 			Destroy (room2Behavior.gameObject);
+
+			return roomBehaviorInstance;
 
 		}
 
