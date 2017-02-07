@@ -16,7 +16,6 @@ public class Laser : MonoBehaviour {
 			c.gameObject.GetComponent<AI_Controller>().Damage(damage); 
 			Destroy(gameObject);
 		}
-		// Whenever the laser comes in contact with another collider, destroy it. 
 
 
 	}

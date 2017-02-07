@@ -131,7 +131,17 @@ public class PlayerScript : MonoBehaviour {
 		laserInstance.GetComponent<Laser>().SetDamage(10);	
 
 	}
+	/*
+	private Quaternion RotatePoint(Vector3 angle, Vector3 point){
+		return Quaternion.Euler(angle) * point;
+	}
 
+	private Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angle){
+		Vector3 dir = point - pivot;
+		dir = Quaternion.Euler(angle) *dir;
+		return dir + pivot;
+	}
+	*/
 
 	/// <summary>
 	/// Fires a dual shot.
@@ -139,17 +149,46 @@ public class PlayerScript : MonoBehaviour {
 	void ShootDualShot(float initialSpeed) {
 		 
 		// Create the correct bullet spawn position 
-		Vector3 spawnPosition = transform.position + (transform.forward);
-		spawnPosition.y = transform.position.y + 1;
+		//Vector3 spawnPosition1 = RotatePointAroundPivot(transform.position + transform.forward, transform.position, new Vector3(0, -45, 0));
+		//Vector3 spawnPosition2 = RotatePointAroundPivot(transform.position + transform.forward, transform.position, new Vector3(0, 45, 0));
+		Vector3 spawnPosition1 = transform.position + transform.forward;
+		Vector3 spawnPosition2 = transform.position + transform.forward;
+
+		spawnPosition1.y = transform.position.y + 1;
+		spawnPosition1.x = transform.position.x + 0.20f;
+		spawnPosition2.y = transform.position.y + 1;
+		spawnPosition2.x = transform.position.x - 0.20f;
 
 		// Instantiate the bullet
-		GameObject laserInstance = Instantiate(bulletReference, spawnPosition, transform.rotation);
+		//GameObject laserInstance1 = Instantiate(bulletReference, spawnPosition1,  RotatePoint(new Vector3(0, -45, 0), transform.position) );
+		//GameObject laserInstance2 = Instantiate(bulletReference, spawnPosition2,  RotatePoint(new Vector3(0, 45, 0),  transform.position) );
+
+		float angle = transform.eulerAngles.y;
+		float rotation = 1 ;
+
+		if (angle > 180) {
+			angle -= 360;
+		}
+
+		if (angle > 130 || angle < -130) {
+			rotation = 1;
+		}
+		print(angle);
+		GameObject laserInstance1 = Instantiate(bulletReference, spawnPosition1, transform.rotation*=Quaternion.Euler(0, -10f*rotation, 0));
+		GameObject laserInstance2 = Instantiate(bulletReference, spawnPosition2, transform.rotation*=Quaternion.Euler(0, 20f*rotation, 0));
 
 		// Move the bullet appropriatly
-		Rigidbody bulletBody = laserInstance.GetComponent<Rigidbody>();
-		bulletBody.velocity = laserInstance.transform.forward*initialSpeed;
-		bulletBody.AddForce(transform.forward*500);
-		laserInstance.GetComponent<Laser>().SetDamage(20);	
+		Rigidbody bulletBody1 = laserInstance1.GetComponent<Rigidbody>();
+		Rigidbody bulletBody2 = laserInstance2.GetComponent<Rigidbody>();
+
+		bulletBody1.velocity = laserInstance1.transform.forward*initialSpeed;
+		bulletBody2.velocity = laserInstance2.transform.forward*initialSpeed;
+
+		bulletBody1.AddForce(laserInstance1.transform.forward*500);
+		bulletBody2.AddForce(laserInstance2.transform.forward*500);
+
+		laserInstance1.GetComponent<Laser>().SetDamage(10);
+		laserInstance2.GetComponent<Laser>().SetDamage(10);
 
 	}
 
@@ -158,18 +197,31 @@ public class PlayerScript : MonoBehaviour {
 	/// </summary>
 	void ShootTriShot(float initialSpeed) {
 		 
-		// Create the correct bullet spawn position 
-		Vector3 spawnPosition = transform.position + (transform.forward);
-		spawnPosition.y = transform.position.y + 1;
+		Vector3 spawnPosition1 = transform.position + (transform.forward);
+		Vector3 spawnPosition2 = transform.position + (transform.forward);
+
+
+		spawnPosition1.y = transform.position.y + 1;
+		//spawnPosition1.x = transform.position.x - 0.10f;
+		spawnPosition2.y = transform.position.y + 1;
+		//spawnPosition2.x = transform.position.x + 0.10f;
 
 		// Instantiate the bullet
-		GameObject laserInstance = Instantiate(bulletReference, spawnPosition, transform.rotation);
+		GameObject laserInstance1 = Instantiate(bulletReference, spawnPosition1, transform.rotation);
+		GameObject laserInstance2 = Instantiate(bulletReference, spawnPosition2, transform.rotation);
 
 		// Move the bullet appropriatly
-		Rigidbody bulletBody = laserInstance.GetComponent<Rigidbody>();
-		bulletBody.velocity = laserInstance.transform.forward*initialSpeed;
-		bulletBody.AddForce(transform.forward*500);
-		laserInstance.GetComponent<Laser>().SetDamage(30);	
+		Rigidbody bulletBody1 = laserInstance1.GetComponent<Rigidbody>();
+		Rigidbody bulletBody2 = laserInstance2.GetComponent<Rigidbody>();
+
+		bulletBody1.velocity = laserInstance1.transform.forward*initialSpeed;
+		bulletBody2.velocity = laserInstance2.transform.forward*initialSpeed;
+
+		bulletBody1.AddForce(transform.forward*500);
+		bulletBody2.AddForce(transform.forward*500);
+
+		laserInstance1.GetComponent<Laser>().SetDamage(10);
+		laserInstance2.GetComponent<Laser>().SetDamage(10);
 
 	}
 
