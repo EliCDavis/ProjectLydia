@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 54248382864533482}
   - component: {fileID: 65764449304835890}
   - component: {fileID: 114292239774108284}
+  - component: {fileID: 114270386583540842}
   m_Layer: 2
   m_Name: Drone
   m_TagString: Enemy
@@ -432,6 +433,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114270386583540842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1313490739628028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2833e15acdea6264ea956518ccc21153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
 --- !u!114 &114292239774108284
 MonoBehaviour:
   m_ObjectHideFlags: 1

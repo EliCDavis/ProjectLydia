@@ -41,6 +41,9 @@ namespace Lydia.Scenes.Factory
 		[SerializeField]
 		Text enemiesRemainingText;
 
+		[SerializeField]
+		Text currentWaveText;
+
 		public void SetCurrentGameState(GameState state) {
 			currentState = state;
 
@@ -67,7 +70,11 @@ namespace Lydia.Scenes.Factory
 		}
 
 		public void SetTimeTillNextWave(float time) {
-			enemiesRemainingText.text = System.String.Format("{0:0.} till wave", time);
+			enemiesRemainingText.text = System.String.Format("{0:0.} til wave", time);
+		}
+
+		public void SetCurrentWave (int wave) {
+			currentWaveText.text = "Wave: " + wave;
 		}
 
 		public void SetPlayer(PlayerScript player) {

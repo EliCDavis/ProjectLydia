@@ -27,6 +27,14 @@ namespace Lydia.MapGeneration {
 			return explosionReference;
 		}
 
+		private GameObject cylinderReference = null;
+		private GameObject GetCylinderReference() {
+			if (cylinderReference == null) {
+				cylinderReference = Resources.Load<GameObject> ("MapPieces/Factory/Cylinder");
+			}
+			return cylinderReference;
+		}
+
 		public void AddRoom(RoomBehavior room) {
 			getRooms().Add (room);
 		}
@@ -95,7 +103,14 @@ namespace Lydia.MapGeneration {
 				foreach (Transform childFromRoom2 in room2Behavior.transform) {
 					if (childFromRoom1.position == childFromRoom2.position) {
 
+						// Randomly spawn cylinder
+						if (Random.Range (0,5)>3) {
+							Instantiate (GetCylinderReference (), childFromRoom1.position + (Vector3.up * .5f), Quaternion.identity);
+						}
+
 						GameObject explosion = Instantiate(GetExplosionReference (),childFromRoom1.position, Quaternion.identity);
+						//GetCylinderReference
+
 						Destroy (explosion, 3.95f);
 
 						// Destroy the walls

@@ -138,8 +138,6 @@ namespace Lydia.Scenes.Factory
 		private void SwitchState (GameState newState)
 		{
 
-			Debug.Log ("ss: "+newState.ToString());
-
 			if (newState == currentStateOfGame) {
 				Debug.LogWarning ("Attempting to swtich state to a the state we're already on.");
 				return;
@@ -167,7 +165,7 @@ namespace Lydia.Scenes.Factory
 		private void BeforeGameStartStateUpdate() {
 			Random.InitState (0);
 
-			currentMapBehavior = GenerateMap (MapGenerator.CreateMap(3));
+			currentMapBehavior = GenerateMap (MapGenerator.CreateMap(25));
 
 			GameObject playerObj = PlayerFactory.CreatePlayer (currentMapBehavior.GetMapReference().Rooms[0].GetRandomPosition());
 			player = playerObj.GetComponent<PlayerScript> ();
@@ -251,7 +249,7 @@ namespace Lydia.Scenes.Factory
 				return 0;
 			}
 
-			while(currentEnemies.Count < maxEnemies && Random.Range(0, currentEnemies.Count) < room.Area.Length*4){
+			while(currentEnemies.Count < maxEnemies && Random.Range(0, currentEnemies.Count) < room.Area.Length*3){
 				SpawnEnemy (room, player.gameObject);
 			}
 
@@ -278,6 +276,16 @@ namespace Lydia.Scenes.Factory
 		private void NextWave (MapBehavior mapBehavior, Vector3 playerPosition, int currentWave)
 		{
 
+			if(currentWave == 10){
+				player.SetGunType (GunType.Power2);
+			}
+
+			if(currentWave == 20){
+				player.SetGunType (GunType.Power3);
+			}
+
+			playerHUD.SetCurrentWave (currentWave);
+
 			if (mapBehavior == null) {
 				Debug.LogError ("Trying to start the next wave with no current map");
 				return;
@@ -301,7 +309,7 @@ namespace Lydia.Scenes.Factory
 
 				// Calculate enemies of this wave
 				// Why this formula? I fucked around on a graphing calculator till I got something I liked
-				numberOfEnemiesForThisWave = (int)(10 + (Mathf.Log10(currentWave)*10) + (Mathf.Pow(currentWave,3.1f) / 1000f));
+				numberOfEnemiesForThisWave = (int)(10 + (Mathf.Log10(currentWave)*15) + (Mathf.Pow(currentWave,3.1f) / 1000f));
 
 				// Spawn enemies
 				numberOfEnemiesSpawnedThisWave = SpawnInitialEnemies(selectedRoomToMerge, currentWave, numberOfEnemiesForThisWave);

@@ -183,8 +183,6 @@ public class AI_Controller : MonoBehaviour {
 
 	public void Damage(int damage) {
 		this.health = Mathf.Max(0, this.health - damage);
-		Debug.Log(this.health);
-		Debug.Log(damage);
 		if (this.health == 0) {
 			Explode();
 		}
@@ -199,8 +197,6 @@ public class AI_Controller : MonoBehaviour {
 
 	void Explode() {
 		GameObject explosionInstance = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-		//AudioSource explosionSound = Instantiate(Sound.Load("explosion", AudioSource), transform.position, Quaternion.identity);
-		//Destroy(explosionSound, 2f);
 		Destroy(explosionInstance, 1.98f);
 		Destroy(gameObject);
 	}

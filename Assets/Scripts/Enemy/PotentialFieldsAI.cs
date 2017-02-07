@@ -9,7 +9,7 @@ namespace Lydia.Enemy {
 		[SerializeField]
 		GameObject target = null;
 
-		private float targetAttractiveForce = 6;
+		private float targetAttractiveForce = 5;
 
 		private float speed = 2f;
 
