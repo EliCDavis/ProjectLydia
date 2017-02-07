@@ -14,8 +14,9 @@ public class Laser : MonoBehaviour {
 	void OnCollisionEnter(Collision c) {
 		if (c.gameObject.tag == "Enemy") {
 			c.gameObject.GetComponent<AI_Controller>().Damage(damage); 
-			Destroy(gameObject);
 		}
+
+		Destroy(gameObject);
 
 
 	}
