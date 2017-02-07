@@ -189,7 +189,7 @@ public class AI_Controller : MonoBehaviour {
 
 	void OnCollisionEnter(Collision c) {
 		if (c.gameObject.tag == "Player") {
-			c.gameObject.GetComponent<PlayerScript>().Damage(10);
+			c.gameObject.GetComponent<PlayerScript>().Damage(30);
 			Explode(); 
 		}
 	}

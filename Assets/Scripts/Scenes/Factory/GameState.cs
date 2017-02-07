@@ -8,7 +8,8 @@ namespace Lydia.Scenes.Factory
 	public enum GameState {
 		BeforeGameStart,
 		WaveInProgress,
-		WaitingForWave
+		WaitingForWave,
+		PlayerDead
 	}
 
 }

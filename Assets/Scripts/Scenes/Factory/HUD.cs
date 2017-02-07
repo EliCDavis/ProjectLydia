@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Lydia.Scenes.Factory
 {
@@ -15,18 +16,18 @@ namespace Lydia.Scenes.Factory
 		private GameObject pausedMenu;
 
 		/// <summary>
+		/// Menu presented to the player when they die.
+		/// </summary>
+		[SerializeField]
+		private GameObject deadMenu;
+
+		/// <summary>
 		/// The player object that the player controls in the scene
 		/// </summary>
 		private PlayerScript player = null;
 
 		// The current Game State
 		private GameState currentState = GameState.BeforeGameStart;
-
-		// Variables for when we're fighting off a wave
-		private int enemiesRemaining;
-
-		// Variables for when we're waiting for a wave to begin
-		private float timeTillNextWave;
 
 		[SerializeField]
 		Slider healthBar;
@@ -36,24 +37,33 @@ namespace Lydia.Scenes.Factory
 
 		public void SetCurrentGameState(GameState state) {
 			currentState = state;
+
+			if (state == GameState.PlayerDead) {
+				deadMenu.SetActive (true);
+			}
+
+		}
+
+		public void RestartScene () {
+			SceneManager.LoadScene (SceneManager.GetActiveScene().buildIndex);
+		}
+
+		public void GoToMainMenu() {
+			SceneManager.LoadScene ("MainMenu");
 		}
 
 		public void SetEnemiesRemaining(int remaining) {
-			enemiesRemaining = remaining;
 			enemiesRemainingText.text = "Remaining: " + remaining.ToString();
 		}
 
 		public void SetTimeTillNextWave(float time) {
-			timeTillNextWave = time;
-			enemiesRemainingText.text = System.String.Format("Next Wave in : {0:0.00}", time);
-			Debug.Log (time + " " + System.String.Format("Next Wave in : {0:0.00}", time));
+			enemiesRemainingText.text = System.String.Format("{0:0.} till wave", time);
 		}
 
 		public void SetPlayer(PlayerScript player) {
 			this.player = player;
 			healthBar.minValue = 0f;
 			healthBar.maxValue = (float)player.GetMaxHealth ();
-			Debug.Log ("Max Health: " + player.GetMaxHealth());
 		}
 
 		void Update() {

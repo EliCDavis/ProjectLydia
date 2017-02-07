@@ -29,7 +29,7 @@ namespace Lydia.Scenes.Factory
 		/// How much time a player will have to get ready for the
 		/// next incoming wave after finished off the last one.
 		/// </summary>
-		private int timeBetweenWaves = 10;
+		private int timeBetweenWaves = 5;
 
 		/// <summary>
 		/// Whether or not the game is currently paused
@@ -82,7 +82,7 @@ namespace Lydia.Scenes.Factory
 		/// <summary>
 		/// Reference to the GameObject the player can control in the scene
 		/// </summary>
-		private GameObject player;
+		private PlayerScript player;
 
 		/// <summary>
 		/// Called once the scene has been initialized
@@ -157,8 +157,9 @@ namespace Lydia.Scenes.Factory
 		}
 
 		private void BeforeGameStartStateUpdate() {
-			player = PlayerFactory.CreatePlayer (Vector3.zero);
-			playerHUD.SetPlayer (player.GetComponent<PlayerScript>());
+			GameObject playerObj = PlayerFactory.CreatePlayer (Vector3.zero);
+			player = playerObj.GetComponent<PlayerScript> ();
+			playerHUD.SetPlayer (player);
 			followTarget.target = player.transform;
 			currentMapBehavior = StartLevel (MapGenerator.CreateMap(25));
 			SwitchState (GameState.WaitingForWave);
@@ -185,6 +186,12 @@ namespace Lydia.Scenes.Factory
 		private void WaveInProgressStateUpdate ()
 		{
 
+			if (player.GetHealth() == 0) {
+				SwitchState (GameState.PlayerDead);
+				Destroy (player.gameObject);
+				return;
+			}
+
 			// Constantly clean list of destroyed enemies...
 			while(currentEnemies.Contains(null)){
 				currentEnemies.Remove (null);
@@ -195,7 +202,7 @@ namespace Lydia.Scenes.Factory
 				SwitchState (GameState.WaitingForWave);
 			}
 			else if (currentEnemies.Count < 15 && numberOfEnemiesForThisWave < numberOfEnemiesSpawnedThisWave) {
-				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player);
+				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player.gameObject);
 				numberOfEnemiesSpawnedThisWave++;
 			}
 
@@ -229,7 +236,7 @@ namespace Lydia.Scenes.Factory
 			}
 
 			while(currentEnemies.Count < maxEnemies && Random.Range(0, currentEnemies.Count) < room.Area.Length*4){
-				SpawnEnemy (room, player);
+				SpawnEnemy (room, player.gameObject);
 			}
 
 			return currentEnemies.Count;
