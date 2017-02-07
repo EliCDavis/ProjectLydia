@@ -30,6 +30,7 @@ public class AI_Controller : MonoBehaviour {
 	[SerializeField]
 	private GameObject explosionPrefab;
 
+
 	public void SetPlayer(GameObject player) {
 		this.player = player;
 	}
@@ -196,6 +197,8 @@ public class AI_Controller : MonoBehaviour {
 
 	void Explode() {
 		GameObject explosionInstance = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+		//AudioSource explosionSound = Instantiate(Sound.Load("explosion", AudioSource), transform.position, Quaternion.identity);
+		//Destroy(explosionSound, 2f);
 		Destroy(explosionInstance, 1.98f);
 		Destroy(gameObject);
 	}
