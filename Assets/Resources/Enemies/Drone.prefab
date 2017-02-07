@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 65764449304835890}
   - component: {fileID: 114292239774108284}
   m_Layer: 2
-  m_Name: PA_Drone
+  m_Name: Drone
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,6 +447,6 @@ MonoBehaviour:
   mag: 4
   max_dist: 5
   offset: 1.92805
-  debug: 1
+  debug: 0
   explosionPrefab: {fileID: 1000011128802252, guid: 96730f8640590934eacb6f860058e7f9,
     type: 2}

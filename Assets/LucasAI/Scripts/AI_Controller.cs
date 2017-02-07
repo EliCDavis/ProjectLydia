@@ -8,6 +8,7 @@ public class AI_Controller : MonoBehaviour {
 	public float mag;
 	public float max_dist;
 	public float offset;
+
 	[SerializeField]
 	bool debug = false; 
 
@@ -29,6 +30,10 @@ public class AI_Controller : MonoBehaviour {
 	[SerializeField]
 	private GameObject explosionPrefab;
 
+	public void SetPlayer(GameObject player) {
+		this.player = player;
+	}
+
 	// Use this for initialization
 	void Start () {
 		state = wall_follow.STATE_FIND;
@@ -39,9 +44,10 @@ public class AI_Controller : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (debug) {
+		if (player == null || debug) {
 			return;
 		}
+
 		last_state = state;
 		RaycastHit front, wall, play;
 		float front_dist = float.MaxValue;
