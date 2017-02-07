@@ -8,6 +8,8 @@ public class AI_Controller : MonoBehaviour {
 	public float mag;
 	public float max_dist;
 	public float offset;
+	[SerializeField]
+	bool debug = false; 
 
 	public enum wall_follow {
 		STATE_FIND,
@@ -22,14 +24,24 @@ public class AI_Controller : MonoBehaviour {
 	private wall_follow state;
 	private wall_follow last_state;
 
+	private int health;
+
+	[SerializeField]
+	private GameObject explosionPrefab;
+
 	// Use this for initialization
 	void Start () {
 		state = wall_follow.STATE_FIND;
 		counter = 0;
+		health = 100;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (debug) {
+			return;
+		}
 		last_state = state;
 		RaycastHit front, wall, play;
 		float front_dist = float.MaxValue;
@@ -158,5 +170,27 @@ public class AI_Controller : MonoBehaviour {
 
 			break;
 		}
+	}
+
+	public void Damage(int damage) {
+		this.health = Mathf.Max(0, this.health - damage);
+		Debug.Log(this.health);
+		Debug.Log(damage);
+		if (this.health == 0) {
+			Explode();
+		}
+	}
+
+	void OnCollisionEnter(Collision c) {
+		if (c.gameObject.tag == "Player") {
+			c.gameObject.GetComponent<PlayerScript>().Damage(10);
+			Explode(); 
+		}
+	}
+
+	void Explode() {
+		GameObject explosionInstance = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+		Destroy(explosionInstance, 1.98f);
+		Destroy(gameObject);
 	}
 }

@@ -21,13 +21,22 @@ public class PlayerScript : MonoBehaviour {
 
 	private GameObject bulletReference;
 
-	private GunType currentGunType = GunType.SingleShot;
+	[SerializeField]
+	private GunType currentGunType;
+
+	private int health;
+	private int maxHealth;
 
 	// Use this for initialization
 	void Start () {
+		health = 100;
+		maxHealth = 100;
 		anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
 		speedMultiplier = 6f;
+
+		// Start the game with a single shot
+		currentGunType = GunType.SingleShot;
 
 		// Load the bullet reference from our prefabs
 		bulletReference = Resources.Load("laser") as GameObject;
@@ -46,17 +55,7 @@ public class PlayerScript : MonoBehaviour {
 		} else {
 			speedMultiplier = 6f;
 		}
-		
-		if (Input.GetKeyDown("2")) {
-
-			int random = Random.Range(0,2);
-
-			if (random == 0) {
-				anim.Play("DAMAGED00", -1, 0f);
-			} else {
-				anim.Play("DAMAGED01", -1, 0f);
-			} 
-		}
+	
 
 		if (Input.GetMouseButtonDown(0)) {
 			Shoot(currentGunType, move);
@@ -87,6 +86,10 @@ public class PlayerScript : MonoBehaviour {
         transform.eulerAngles = tempAngle;
 	}
 
+	void Shoot(){
+		Shoot(GunType.SingleShot, 0);
+	}
+
 	void Shoot(GunType fireType){
 		Shoot(fireType, 0);
 	}
@@ -97,11 +100,13 @@ public class PlayerScript : MonoBehaviour {
 			case GunType.SingleShot:
 				ShootSingleShot(initialSpeed);
 			break;
+
 			case GunType.DualShot:
-
+				ShootDualShot(initialSpeed);
 			break;
-			case GunType.TriShot:
 
+			case GunType.TriShot:
+				ShootTriShot(initialSpeed);
 			break;
 		}
 
@@ -111,7 +116,7 @@ public class PlayerScript : MonoBehaviour {
 	/// Fires a single shot, the most basic type of firing a gun.
 	/// </summary>
 	void ShootSingleShot(float initialSpeed) {
-
+		 
 		// Create the correct bullet spawn position 
 		Vector3 spawnPosition = transform.position + (transform.forward);
 		spawnPosition.y = transform.position.y + 1;
@@ -122,8 +127,63 @@ public class PlayerScript : MonoBehaviour {
 		// Move the bullet appropriatly
 		Rigidbody bulletBody = laserInstance.GetComponent<Rigidbody>();
 		bulletBody.velocity = laserInstance.transform.forward*initialSpeed;
-		bulletBody.AddForce(transform.forward*500);	
+		bulletBody.AddForce(transform.forward*500);
+		laserInstance.GetComponent<Laser>().SetDamage(10);	
 
+	}
+
+
+	/// <summary>
+	/// Fires a dual shot.
+	/// </summary>
+	void ShootDualShot(float initialSpeed) {
+		 
+		// Create the correct bullet spawn position 
+		Vector3 spawnPosition = transform.position + (transform.forward);
+		spawnPosition.y = transform.position.y + 1;
+
+		// Instantiate the bullet
+		GameObject laserInstance = Instantiate(bulletReference, spawnPosition, transform.rotation);
+
+		// Move the bullet appropriatly
+		Rigidbody bulletBody = laserInstance.GetComponent<Rigidbody>();
+		bulletBody.velocity = laserInstance.transform.forward*initialSpeed;
+		bulletBody.AddForce(transform.forward*500);
+		laserInstance.GetComponent<Laser>().SetDamage(20);	
+
+	}
+
+	/// <summary>
+	/// Fires a tri shot.
+	/// </summary>
+	void ShootTriShot(float initialSpeed) {
+		 
+		// Create the correct bullet spawn position 
+		Vector3 spawnPosition = transform.position + (transform.forward);
+		spawnPosition.y = transform.position.y + 1;
+
+		// Instantiate the bullet
+		GameObject laserInstance = Instantiate(bulletReference, spawnPosition, transform.rotation);
+
+		// Move the bullet appropriatly
+		Rigidbody bulletBody = laserInstance.GetComponent<Rigidbody>();
+		bulletBody.velocity = laserInstance.transform.forward*initialSpeed;
+		bulletBody.AddForce(transform.forward*500);
+		laserInstance.GetComponent<Laser>().SetDamage(30);	
+
+	}
+
+	public int GetHealth() {
+		return this.health;
+	}
+
+	public int GetMaxHealth() {
+		return this.maxHealth;
+	}
+
+	public void Damage(int damage) {
+		this.health = Mathf.Max(0, this.health - damage);
+		anim.Play("DAMAGED00", -1, 0f);
 	}
 
 	void OnTriggerEnter(Collider enemy) {
