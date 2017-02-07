@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/InGame/i dunno.unity
   - enabled: 1
     path: Assets/Scenes/InGame/MainMenu.unity
+  - enabled: 1
+    path: Assets/Scenes/InGame/Factory.unity

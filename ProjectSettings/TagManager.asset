@@ -13,6 +13,10 @@ TagManager:
   - ShowOnPause
   - ShowOnClick
   - HideOnClick
+  - hownottoplay
+  - howtoplay
+  - credits
+  - death
   layers:
   - Default
   - TransparentFX

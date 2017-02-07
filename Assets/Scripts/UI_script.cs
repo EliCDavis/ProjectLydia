@@ -124,9 +124,22 @@ public class UI_script : MonoBehaviour {
 
 	public void showCredits()
 	{
-		foreach (GameObject g in credits) {
-			g.SetActive (true);
+		Debug.Log ("Toggling....");
+
+		if (credits.Length == 0) {
+			return;
 		}
+		if (credits [0].activeSelf) {
+			foreach (GameObject g in credits) {
+				g.SetActive (false);
+			}
+		} else {
+			foreach (GameObject g in credits) {
+				g.SetActive (true);
+			}
+		}
+
+
 	}
     
     public void showDeath()
@@ -185,11 +198,9 @@ public class UI_script : MonoBehaviour {
 
 
     //exits to Main Menu
-    public void LoadLevel(string MainMenu)
+    public void LoadLevel(string levelToLoad)
     {
-        //Application.Quit();
-        // SceneManager.LoadScene("MainMenu");
-        SceneManager.LoadScene(MainMenu);
+		SceneManager.LoadScene(levelToLoad);
     }
 
     public void quit()
