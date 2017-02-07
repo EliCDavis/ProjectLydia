@@ -16,6 +16,7 @@ namespace Lydia.Enemy {
 		public static GameObject CreateEnemy(EnemyType enemyType, Vector3 position) {
 
 			GameObject enemyInstance = GameObject.Instantiate (GetEnemyReference (enemyType), position, Quaternion.identity);
+			enemyInstance.layer = 9; // Layer 9 is enemies
 
 			return enemyInstance;
 

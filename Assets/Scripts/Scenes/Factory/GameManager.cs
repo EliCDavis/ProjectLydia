@@ -141,6 +141,12 @@ namespace Lydia.Scenes.Factory
 		/// <param name="newState">New state.</param>
 		private void SwitchState (GameState newState)
 		{
+
+			if (newState == currentStateOfGame) {
+				Debug.LogWarning ("Attempting to swtich state to a the state we're already on.");
+				return;
+			}
+
 			timeOfGameStateChange = Time.time;
 
 			switch (newState) {
@@ -161,11 +167,13 @@ namespace Lydia.Scenes.Factory
 		}
 
 		private void BeforeGameStartStateUpdate() {
-			GameObject playerObj = PlayerFactory.CreatePlayer (Vector3.zero);
+
+			currentMapBehavior = GenerateMap (MapGenerator.CreateMap(3));
+
+			GameObject playerObj = PlayerFactory.CreatePlayer (currentMapBehavior.GetMapReference().Rooms[0].GetRandomPosition());
 			player = playerObj.GetComponent<PlayerScript> ();
 			playerHUD.SetPlayer (player);
 			followTarget.target = player.transform;
-			currentMapBehavior = StartLevel (MapGenerator.CreateMap(25));
 			SwitchState (GameState.WaitingForWave);
 		}
 
@@ -220,7 +228,7 @@ namespace Lydia.Scenes.Factory
 
 		}
 
-		public MapBehavior StartLevel (Map mapToBuild)
+		public MapBehavior GenerateMap (Map mapToBuild)
 		{
 			GameObject mapObject = MapGenerator.BuildMap (mapToBuild);
 			return mapObject.GetComponent<MapBehavior> ();

@@ -45,6 +45,8 @@ public class AI_Controller : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		return;
+
 		if (player == null || debug) {
 			return;
 		}
@@ -66,7 +68,7 @@ public class AI_Controller : MonoBehaviour {
 		}
 
 		// Is there a straight shot at the player
-		if (Physics.Raycast (transform.position, e2p, out play)) {
+		if (Physics.Raycast (transform.position, e2p, out play, max_dist, 9)) {
 			if (play.distance <= e2p.magnitude + offset + 0.1f && play.distance >= e2p.magnitude + offset - 0.1f) {
 				if (counter < 2) {
 					state = wall_follow.STATE_BUFFER;
@@ -88,13 +90,13 @@ public class AI_Controller : MonoBehaviour {
 
 			Debug.DrawRay (transform.position, v2);
 
-			if (Physics.Raycast (transform.position, v1, out front, max_dist)) {
+			if (Physics.Raycast (transform.position, v1, out front, max_dist, 9)) {
 				if (front.distance < front_dist) {
 					front_dist = front.distance;
 				}
 			}
 
-			if (Physics.Raycast (transform.position, v2, out wall, max_dist)) {
+			if (Physics.Raycast (transform.position, v2, out wall, max_dist, 9)) {
 				if (wall.distance < wall_dist) {
 					wall_dist = wall.distance;
 				}
