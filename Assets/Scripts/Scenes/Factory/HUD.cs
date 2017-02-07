@@ -22,6 +22,12 @@ namespace Lydia.Scenes.Factory
 		private GameObject deadMenu;
 
 		/// <summary>
+		/// The menu that is presented when the player clears all stages
+		/// </summary>
+		[SerializeField]
+		private GameObject winMenu;
+
+		/// <summary>
 		/// The player object that the player controls in the scene
 		/// </summary>
 		private PlayerScript player = null;
@@ -40,6 +46,10 @@ namespace Lydia.Scenes.Factory
 
 			if (state == GameState.PlayerDead) {
 				deadMenu.SetActive (true);
+			}
+
+			if (state == GameState.AllWavesCleared) {
+				winMenu.SetActive (true);
 			}
 
 		}

@@ -150,6 +150,10 @@ namespace Lydia.Scenes.Factory
 				NextWave (currentMapBehavior, player.transform.position, ++currentWave);
 				break;
 
+			case GameState.AllWavesCleared:
+				Destroy (player.gameObject);
+				break;
+
 			}
 
 			currentStateOfGame = newState;
@@ -199,7 +203,13 @@ namespace Lydia.Scenes.Factory
 
 			// If all enemies are dead and we've spawned all we wanted too
 			if (currentEnemies.Count == 0 && numberOfEnemiesForThisWave == numberOfEnemiesSpawnedThisWave) {
-				SwitchState (GameState.WaitingForWave);
+
+				if (currentMapBehavior.GetMapReference ().Rooms.Count == 1) {
+					SwitchState (GameState.AllWavesCleared);
+				} else {
+					SwitchState (GameState.WaitingForWave);
+				}
+
 			}
 			else if (currentEnemies.Count < 15 && numberOfEnemiesForThisWave < numberOfEnemiesSpawnedThisWave) {
 				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player.gameObject);
@@ -212,7 +222,6 @@ namespace Lydia.Scenes.Factory
 
 		public MapBehavior StartLevel (Map mapToBuild)
 		{
-			currentMap = MapGenerator.CreateMap (25, 1);
 			GameObject mapObject = MapGenerator.BuildMap (mapToBuild);
 			return mapObject.GetComponent<MapBehavior> ();
 		}
@@ -295,6 +304,7 @@ namespace Lydia.Scenes.Factory
 			} else {
 				// We're at the end of the game! No more rooms to merge!
 				Debug.Log ("You Won! Or we where just unable to find a neighboring room.");
+				SwitchState (GameState.AllWavesCleared);
 			}
 
 		}

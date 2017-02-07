@@ -9,7 +9,8 @@ namespace Lydia.Scenes.Factory
 		BeforeGameStart,
 		WaveInProgress,
 		WaitingForWave,
-		PlayerDead
+		PlayerDead,
+		AllWavesCleared
 	}
 
 }
