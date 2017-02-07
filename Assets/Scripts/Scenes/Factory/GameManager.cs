@@ -142,6 +142,8 @@ namespace Lydia.Scenes.Factory
 		private void SwitchState (GameState newState)
 		{
 
+			Debug.Log ("ss: "+newState.ToString());
+
 			if (newState == currentStateOfGame) {
 				Debug.LogWarning ("Attempting to swtich state to a the state we're already on.");
 				return;
@@ -167,6 +169,7 @@ namespace Lydia.Scenes.Factory
 		}
 
 		private void BeforeGameStartStateUpdate() {
+			Random.InitState (0);
 
 			currentMapBehavior = GenerateMap (MapGenerator.CreateMap(3));
 
@@ -267,6 +270,7 @@ namespace Lydia.Scenes.Factory
 		private void SpawnEnemy(Room room, GameObject target) {
 			GameObject enemy = EnemyFactory.CreateEnemy (EnemyType.Drone, room.GetRandomPosition ());
 			enemy.GetComponent<AI_Controller> ().SetPlayer (target);
+			enemy.GetComponent<PotentialFieldsAI> ().SetTarget (target.gameObject);
 			currentEnemies.Add(enemy);
 		}
 

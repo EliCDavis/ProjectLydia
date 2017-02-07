@@ -17,15 +17,6 @@ namespace Lydia.Enemy {
 			this.target = target;
 		}
 
-		void Start () {
-			
-		}
-
-//		private Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angle){
-//			Vector3 dir = point - pivot;
-//			dir = Quaternion.Euler(angle) *dir;
-//			return dir + pivot;
-//		}
 
 		float GetDistance(Vector3 dir) {
 			Debug.DrawRay (transform.position, dir*3);
@@ -52,14 +43,13 @@ namespace Lydia.Enemy {
 				}
 			}
 
-			Debug.Log ("Repulsion: " + repulsion.ToString ());
-
 			Vector3 movementDirection = Vector3.Normalize (( (target.transform.position - this.transform.position).normalized * targetAttractiveForce) - repulsion);
 			movementDirection.y = 0;
 
 			// Smoothly rotate towards the target point.
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementDirection), speed * Time.deltaTime);
 
+			// Move forwards
 			transform.Translate (Vector3.forward* Time.deltaTime * speed);
 
 		}

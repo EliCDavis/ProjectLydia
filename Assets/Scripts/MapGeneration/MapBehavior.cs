@@ -18,6 +18,15 @@ namespace Lydia.MapGeneration {
 			return roomsInstance;
 		}
 
+		// Lazy load explosion effect
+		private GameObject explosionReference = null;
+		private GameObject GetExplosionReference() {
+			if (explosionReference == null) {
+				explosionReference = Resources.Load<GameObject> ("BigExplosionEffect");
+			}
+			return explosionReference;
+		}
+
 		public void AddRoom(RoomBehavior room) {
 			getRooms().Add (room);
 		}
@@ -85,8 +94,14 @@ namespace Lydia.MapGeneration {
 			foreach (Transform childFromRoom1 in room1Behavior.transform) {
 				foreach (Transform childFromRoom2 in room2Behavior.transform) {
 					if (childFromRoom1.position == childFromRoom2.position) {
+
+						GameObject explosion = Instantiate(GetExplosionReference (),childFromRoom1.position, Quaternion.identity);
+						Destroy (explosion, 3.95f);
+
+						// Destroy the walls
 						Destroy (childFromRoom1.gameObject);
 						Destroy (childFromRoom2.gameObject);
+
 					}
 				}
 			}
