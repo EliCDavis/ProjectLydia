@@ -25,12 +25,11 @@ public class PlayerScript : MonoBehaviour {
 	private GunType currentGunType;
 
 	private int health;
-	private int maxHealth;
+	private int maxHealth = 100;
 
 	// Use this for initialization
 	void Start () {
-		health = 100;
-		maxHealth = 100;
+		health = maxHealth;
 		anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
 		speedMultiplier = 6f;

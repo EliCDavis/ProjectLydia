@@ -32,6 +32,9 @@ namespace Lydia.Scenes.Factory
 		[SerializeField]
 		private UnityStandardAssets.Utility.FollowTarget followTarget;
 
+		[SerializeField]
+		private HUD playerHUD;
+
 		/// <summary>
 		/// How much time a player will have to get ready for the
 		/// next incoming wave after finished off the last one.
@@ -165,6 +168,7 @@ namespace Lydia.Scenes.Factory
 
 		private void BeforeGameStartStateUpdate() {
 			player = PlayerFactory.CreatePlayer (Vector3.zero);
+			playerHUD.SetPlayer (player.GetComponent<PlayerScript>());
 			followTarget.target = player.transform;
 			currentMapBehavior = StartLevel (MapGenerator.CreateMap(25));
 			SwitchState (GameState.WaitingForWave);
