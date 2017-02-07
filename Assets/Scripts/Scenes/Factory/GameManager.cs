@@ -9,16 +9,6 @@ namespace Lydia.Scenes.Factory
 {
 
 	/// <summary>
-	/// The different states the game can be in.
-	/// </summary>
-	enum GameState
-	{
-		BeforeGameStart,
-		WaveInProgress,
-		WaitingForWave
-	}
-
-	/// <summary>
 	/// Manages The Game State and it's associated variables 
 	/// such as number of enemies, what wave we're currently
 	/// on, the map's current state, etc.
@@ -163,7 +153,7 @@ namespace Lydia.Scenes.Factory
 			}
 
 			currentStateOfGame = newState;
-
+			playerHUD.SetCurrentGameState (newState);
 		}
 
 		private void BeforeGameStartStateUpdate() {
@@ -180,6 +170,9 @@ namespace Lydia.Scenes.Factory
 		/// </summary>
 		private void WaitingForWaveStateUpdate ()
 		{
+
+			playerHUD.SetTimeTillNextWave (timeOfGameStateChange + timeBetweenWaves - Time.time);
+
 			// Start off the wave after a certain amount of time has passed
 			if (timeOfGameStateChange + timeBetweenWaves < Time.time) {
 				SwitchState (GameState.WaveInProgress);
@@ -203,7 +196,10 @@ namespace Lydia.Scenes.Factory
 			}
 			else if (currentEnemies.Count < 15 && numberOfEnemiesForThisWave < numberOfEnemiesSpawnedThisWave) {
 				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player);
+				numberOfEnemiesSpawnedThisWave++;
 			}
+
+			playerHUD.SetEnemiesRemaining (numberOfEnemiesForThisWave - numberOfEnemiesSpawnedThisWave + currentEnemies.Count);
 
 		}
 
