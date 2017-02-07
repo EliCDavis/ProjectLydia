@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Lydia.MapGeneration;
+using Lydia.Enemy;
+using Lydia.Player;
 
 namespace Lydia.Scenes.Factory
 {
@@ -11,6 +13,7 @@ namespace Lydia.Scenes.Factory
 	/// </summary>
 	enum GameState
 	{
+		BeforeGameStart,
 		WaveInProgress,
 		WaitingForWave
 	}
@@ -22,6 +25,12 @@ namespace Lydia.Scenes.Factory
 	/// </summary>
 	public class GameManager : MonoBehaviour
 	{
+
+		/// <summary>
+		/// What wants to follow the player
+		/// </summary>
+		[SerializeField]
+		private UnityStandardAssets.Utility.FollowTarget followTarget;
 
 		/// <summary>
 		/// How much time a player will have to get ready for the
@@ -59,18 +68,36 @@ namespace Lydia.Scenes.Factory
 		/// </summary>
 		private int currentWave = 0;
 
-		[SerializeField]
+		/// <summary>
+		/// The currently alive enemies in the scene
+		/// </summary>
+		private List<GameObject> currentEnemies;
+
+		/// <summary>
+		/// How many enemies that have been spawned since
+		/// the begining of the current wave we are on.
+		/// 
+		/// This includes dead enemies
+		/// </summary>
+		private int numberOfEnemiesSpawnedThisWave = 0;
+
+		/// <summary>
+		/// How many enemies we're supposed to spawn this wave.
+		/// </summary>
+		private int numberOfEnemiesForThisWave = 0;
+
+		/// <summary>
+		/// Reference to the GameObject the player can control in the scene
+		/// </summary>
 		private GameObject player;
-
-
 
 		/// <summary>
 		/// Called once the scene has been initialized
 		/// </summary>
 		void Start ()
 		{
-			RestartLevel ();
-			currentStateOfGame = GameState.WaitingForWave;
+			currentEnemies = new List<GameObject> ();
+			currentStateOfGame = GameState.BeforeGameStart;
 			timeOfGameStateChange = Time.time;
 		}
 
@@ -97,6 +124,10 @@ namespace Lydia.Scenes.Factory
 		{
 			switch (currentStateOfGame) {
 
+			case GameState.BeforeGameStart:
+				BeforeGameStartStateUpdate ();
+				break;
+
 			case GameState.WaitingForWave:
 				WaitingForWaveStateUpdate ();
 				break;
@@ -107,6 +138,7 @@ namespace Lydia.Scenes.Factory
 			
 			}
 		}
+
 
 		/// <summary>
 		/// Switchs the current game state.
@@ -131,6 +163,13 @@ namespace Lydia.Scenes.Factory
 
 		}
 
+		private void BeforeGameStartStateUpdate() {
+			player = PlayerFactory.CreatePlayer (Vector3.zero);
+			followTarget.target = player.transform;
+			currentMapBehavior = StartLevel (MapGenerator.CreateMap(25));
+			SwitchState (GameState.WaitingForWave);
+		}
+
 		/// <summary>
 		/// Update function when the player is waiting for the 
 		/// next wave to begin
@@ -144,47 +183,31 @@ namespace Lydia.Scenes.Factory
 		}
 
 		/// <summary>
-		/// The currently alive enemies in the scene
-		/// </summary>
-		private List<GameObject> currentEnemies = new List<GameObject>();
-
-		/// <summary>
-		/// How many enemies that have been spawned since
-		/// the begining of the current wave we are on.
-		/// 
-		/// This includes dead enemies
-		/// </summary>
-		private int numberOfEnemiesSpawnedThisWave = 0;
-
-		/// <summary>
-		/// How many enemies we're supposed to spawn this wave.
-		/// </summary>
-		private int numberOfEnemiesForThisWave = 0;
-
-		/// <summary>
 		/// Update function for whenever the wave is currentely in progress
 		/// </summary>
 		private void WaveInProgressStateUpdate ()
 		{
 
+			// Constantly clean list of destroyed enemies...
+			while(currentEnemies.Contains(null)){
+				currentEnemies.Remove (null);
+			}
+
 			// If all enemies are dead and we've spawned all we wanted too
 			if (currentEnemies.Count == 0 && numberOfEnemiesForThisWave == numberOfEnemiesSpawnedThisWave) {
 				SwitchState (GameState.WaitingForWave);
 			}
+			else if (currentEnemies.Count < 15 && numberOfEnemiesForThisWave < numberOfEnemiesSpawnedThisWave) {
+				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player);
+			}
 
 		}
 
-		public void RestartLevel ()
+		public MapBehavior StartLevel (Map mapToBuild)
 		{
 			currentMap = MapGenerator.CreateMap (25, 1);
-			GameObject mapObject = MapGenerator.BuildMap (currentMap);
-			currentMapBehavior = mapObject.GetComponent<MapBehavior> ();
-		}
-
-		public void RestartLevelWithSameMap ()
-		{
-			GameObject mapObject = MapGenerator.BuildMap (currentMap);
-			currentMapBehavior = mapObject.GetComponent<MapBehavior> ();
+			GameObject mapObject = MapGenerator.BuildMap (mapToBuild);
+			return mapObject.GetComponent<MapBehavior> ();
 		}
 
 		/// <summary>
@@ -200,18 +223,27 @@ namespace Lydia.Scenes.Factory
 		/// <param name="maxEnemies">How many enemies your allowed to spawn</param>
 		private int SpawnInitialEnemies (Room room, int wave, int maxEnemies)
 		{
-			int enemiesSpawned = 0;
-
-			while(enemiesSpawned < maxEnemies && Random.Range(0, enemiesSpawned) < room.Area.Length*4){
-				enemiesSpawned++;
-
-				GameObject enemy = GameObject.CreatePrimitive (PrimitiveType.Sphere);
-
-				enemy.transform.position = room.GetRandomPosition ();
-
+			if (currentEnemies.Count != 0) {
+				Debug.LogError ("Using function in wrong context: Should only be used when there are no enemies in the scene.");
+				return 0;
 			}
 
-			return enemiesSpawned;
+			while(currentEnemies.Count < maxEnemies && Random.Range(0, currentEnemies.Count) < room.Area.Length*4){
+				SpawnEnemy (room, player);
+			}
+
+			return currentEnemies.Count;
+		}
+
+		/// <summary>
+		/// Spawns a single enemy which will follow a single target.
+		/// </summary>
+		/// <param name="room">Room.</param>
+		/// <param name="target">Target.</param>
+		private void SpawnEnemy(Room room, GameObject target) {
+			GameObject enemy = EnemyFactory.CreateEnemy (EnemyType.Drone, room.GetRandomPosition ());
+			enemy.GetComponent<AI_Controller> ().SetPlayer (target);
+			currentEnemies.Add(enemy);
 		}
 
 		/// <summary>
