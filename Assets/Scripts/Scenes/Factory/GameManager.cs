@@ -100,10 +100,6 @@ namespace Lydia.Scenes.Factory
 		void Update ()
 		{
 			
-			if (Input.GetKeyDown ("s")) {
-				NextWave (currentMapBehavior, player.transform.position, ++currentWave);
-			}
-
 			if (!currentelyPaused) {
 				GameStateUpdate ();
 			}
@@ -222,7 +218,7 @@ namespace Lydia.Scenes.Factory
 				}
 
 			}
-			else if (currentEnemies.Count < 15 && numberOfEnemiesForThisWave < numberOfEnemiesSpawnedThisWave) {
+			else if (currentEnemies.Count < 15 && numberOfEnemiesSpawnedThisWave < numberOfEnemiesForThisWave) {
 				SpawnEnemy (currentMapBehavior.RoomThatContainsPoint(player.transform.position), player.gameObject);
 				numberOfEnemiesSpawnedThisWave++;
 			}
