@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour {
 	private Rigidbody rbody;
 
 	private float inputV;
+	private float inputH;
 	private float move;
 	private int damageMultiplier;
 
@@ -25,6 +26,12 @@ public class PlayerScript : MonoBehaviour {
 
 	[SerializeField]
 	private GunType currentGunType;
+
+	[SerializeField]
+	private GameObject leftSpark;
+
+	[SerializeField]
+	private GameObject rightSpark;
 
 	private int health;
 	private int maxHealth = 100;
@@ -46,6 +53,8 @@ public class PlayerScript : MonoBehaviour {
 	
 	void Update () {
 		inputV = Input.GetAxis("Vertical");
+		inputH = Input.GetAxis("Horizontal");
+
 		anim.SetFloat("inputV", inputV);
 
 		move = inputV*speedMultiplier;
@@ -56,6 +65,8 @@ public class PlayerScript : MonoBehaviour {
 			speedMultiplier = 6f;
 		}
 	
+		leftSpark.SetActive(inputH < 0 && move == 0);
+		rightSpark.SetActive(inputH > 0 && move == 0);
 
 		if (Input.GetMouseButtonDown(0)) {
 			Shoot(currentGunType, move);
@@ -70,7 +81,7 @@ public class PlayerScript : MonoBehaviour {
 		}
 
 		CorrectPosition();
-		transform.Translate(new Vector3(0, 0, move*Time.deltaTime));
+		transform.Translate(new Vector3(inputH*Time.deltaTime*2f, 0, move*Time.deltaTime));
 	}
 
 	void CorrectPosition() {
